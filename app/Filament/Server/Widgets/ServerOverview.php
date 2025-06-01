@@ -20,29 +20,14 @@ class ServerOverview extends StatsOverviewWidget
     protected function getStats(): array
     {
         return [
-<<<<<<< HEAD
             SmallStatBlock::make(trans('strings.console.overview.name'), $this->server->name)
-                ->extraAttributes([
-                    'class' => 'overflow-x-auto',
-                ]),
+                ->copyOnClick(fn () => request()->isSecure()),
             SmallStatBlock::make(trans('strings.console.overview.status'), $this->status()),
             SmallStatBlock::make(trans('strings.console.overview.address'), $this->server->allocation->address)
-                ->extraAttributes([
-                    'class' => 'overflow-x-auto',
-                ]),
+                ->copyOnClick(fn () => request()->isSecure()),
             SmallStatBlock::make(trans('strings.console.overview.cpu'), $this->cpuUsage()),
             SmallStatBlock::make(trans('strings.console.overview.memory'), $this->memoryUsage()),
             SmallStatBlock::make(trans('strings.console.overview.disk'), $this->diskUsage()),
-=======
-            SmallStatBlock::make('Name', $this->server->name)
-                ->copyOnClick(fn () => request()->isSecure()),
-            SmallStatBlock::make('Status', $this->status()),
-            SmallStatBlock::make('Address', $this->server->allocation->address)
-                ->copyOnClick(fn () => request()->isSecure()),
-            SmallStatBlock::make('CPU', $this->cpuUsage()),
-            SmallStatBlock::make('Memory', $this->memoryUsage()),
-            SmallStatBlock::make('Disk', $this->diskUsage()),
->>>>>>> 35ce1d34aba0c7908c60ed638b2e6fc9a4f356d0
         ];
     }
 
