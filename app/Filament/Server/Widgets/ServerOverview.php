@@ -6,8 +6,10 @@ use App\Enums\ContainerStatus;
 use App\Filament\Server\Components\SmallStatBlock;
 use App\Models\Server;
 use Carbon\CarbonInterface;
+use Filament\Notifications\Notification;
 use Filament\Widgets\StatsOverviewWidget;
 use Illuminate\Support\Number;
+use Livewire\Attributes\On;
 
 class ServerOverview extends StatsOverviewWidget
 {
@@ -18,6 +20,7 @@ class ServerOverview extends StatsOverviewWidget
     protected function getStats(): array
     {
         return [
+<<<<<<< HEAD
             SmallStatBlock::make(trans('strings.console.overview.name'), $this->server->name)
                 ->extraAttributes([
                     'class' => 'overflow-x-auto',
@@ -30,6 +33,16 @@ class ServerOverview extends StatsOverviewWidget
             SmallStatBlock::make(trans('strings.console.overview.cpu'), $this->cpuUsage()),
             SmallStatBlock::make(trans('strings.console.overview.memory'), $this->memoryUsage()),
             SmallStatBlock::make(trans('strings.console.overview.disk'), $this->diskUsage()),
+=======
+            SmallStatBlock::make('Name', $this->server->name)
+                ->copyOnClick(fn () => request()->isSecure()),
+            SmallStatBlock::make('Status', $this->status()),
+            SmallStatBlock::make('Address', $this->server->allocation->address)
+                ->copyOnClick(fn () => request()->isSecure()),
+            SmallStatBlock::make('CPU', $this->cpuUsage()),
+            SmallStatBlock::make('Memory', $this->memoryUsage()),
+            SmallStatBlock::make('Disk', $this->diskUsage()),
+>>>>>>> 35ce1d34aba0c7908c60ed638b2e6fc9a4f356d0
         ];
     }
 
@@ -92,5 +105,17 @@ class ServerOverview extends StatsOverviewWidget
         $total = convert_bytes_to_readable($totalBytes);
 
         return $used . ($this->server->disk > 0 ? ' / ' . $total : ' / ∞');
+    }
+
+    #[On('copyClick')]
+    public function copyClick(string $value): void
+    {
+        $this->js("window.navigator.clipboard.writeText('{$value}');");
+
+        Notification::make()
+            ->title('Copied to clipboard')
+            ->body($value)
+            ->success()
+            ->send();
     }
 }
